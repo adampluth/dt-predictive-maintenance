@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: apluth
       POSTGRES_PASSWORD: evergreen
-      POSTGRES_DB: my_database
+      POSTGRES_DB: dt_data
     ports:
       - "5432:5432"
     volumes:
@@ -21,7 +21,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql+psycopg2://apluth:evergreen@postgres_container:5432/my_database
+      DATABASE_URL: postgresql+psycopg2://apluth:evergreen@postgres_container:5432/dt_data
+
     depends_on:
       - db
     networks:

@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 from app.routers import items_router, health_router
+from app.utils.database import Base, engine
 
+# Initialize FastAPI app
 app = FastAPI()
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 # Include routers
 app.include_router(items_router, prefix="/api/items", tags=["items"])
