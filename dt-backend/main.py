@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import items_router, health_router
+from app.routers import items_router, health_router, db_router, stream_router
 from app.utils.database import Base, engine
 
 # Initialize FastAPI app
@@ -9,9 +9,11 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 # Include routers
-app.include_router(items_router, prefix="/api/items", tags=["items"])
+app.include_router(items_router)
+app.include_router(db_router)
+app.include_router(stream_router)
 app.include_router(health_router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello, FastAPI with PostgreSQL via Docker!"}
+    return {"message": "Welcome to the Digital Twin Backend!"}

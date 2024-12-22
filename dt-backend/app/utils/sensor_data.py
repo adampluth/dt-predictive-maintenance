@@ -1,54 +1,69 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy.orm import Session
-from app.dependencies import get_db
 from app.models import Item
-from app.schemas import ItemCreate
 import csv
 
-router = APIRouter()
-
-# Stream sensor data endpoint
-@router.post("/stream")
-def stream_sensor_data(sensor_data: ItemCreate, db: Session = Depends(get_db)):
-    # Insert the sensor data into the database
-    item = Item(**sensor_data.dict())
-    db.add(item)
-    db.commit()
-    db.refresh(item)
-    return {"status": "success", "data": item}
-
-
-# Import sensor data from CSV
-@router.post("/import")
-def import_sensor_data(file: UploadFile, db: Session = Depends(get_db)):
-    if not file.filename.endswith(".csv"):
-        raise HTTPException(status_code=400, detail="Invalid file format. Only CSV files are allowed.")
+def import_sensor_data(file_content: str, db: Session, truncate: bool = False):
+    """
+    Imports sensor data from a CSV file into the database.
+    
+    Args:
+        file_content (str): The content of the CSV file as a string.
+        db (Session): SQLAlchemy database session.
+        truncate (bool): If True, truncates the `items` table before import.
+    """
+    if truncate:
+        db.query(Item).delete()
+        db.commit()
 
     try:
-        contents = file.file.read().decode("utf-8")
-        reader = csv.DictReader(contents.splitlines())
-        for row in reader:
-            # Ensure all required fields are present in each row
-            item = Item(
-                product_id=row["product_id"],
-                type=row["type"],
-                air_temperature=float(row["air_temperature"]),
-                process_temperature=float(row["process_temperature"]),
-                rotational_speed=int(row["rotational_speed"]),
-                torque=float(row["torque"]),
-                tool_wear=int(row["tool_wear"]),
-                machine_failure=bool(row["machine_failure"]),
-                twf=bool(row["twf"]),
-                hdf=bool(row["hdf"]),
-                pwf=bool(row["pwf"]),
-                osf=bool(row["osf"]),
-                rnf=bool(row["rnf"]),
-            )
-            db.add(item)
-        db.commit()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        file.file.close()
+        # Read the CSV content
+        csv_reader = csv.DictReader(file_content.splitlines())
 
-    return {"status": "success", "message": "File imported successfully."}
+        for row in csv_reader:
+            # Create or update an item object from the row
+            item = Item(
+                product_id=row["Product ID"],
+                type=row["Type"],
+                air_temperature=float(row["Air temperature [K]"]),
+                process_temperature=float(row["Process temperature [K]"]),
+                rotational_speed=int(row["Rotational speed [rpm]"]),
+                torque=float(row["Torque [Nm]"]),
+                tool_wear=int(row["Tool wear [min]"]),
+                machine_failure=bool(int(row["Machine failure"])),
+                twf=bool(int(row["TWF"])),
+                hdf=bool(int(row["HDF"])),
+                pwf=bool(int(row["PWF"])),
+                osf=bool(int(row["OSF"])),
+                rnf=bool(int(row["RNF"])),
+            )
+            db.merge(item)
+
+        db.commit()
+
+    except Exception as e:
+        db.rollback()
+        raise Exception(f"Failed to import CSV data: {e}")
+
+
+def stream_sensor_data(db: Session, batch_size: int = 100):
+    """
+    Streams sensor data from the database in batches.
+
+    Args:
+        db (Session): SQLAlchemy database session.
+        batch_size (int): The number of rows to stream at a time.
+
+    Returns:
+        generator: A generator yielding database rows in Server-Sent Events (SSE) format.
+    """
+    def data_generator():
+        offset = 0
+        while True:
+            items = db.query(Item).offset(offset).limit(batch_size).all()
+            if not items:
+                break  # Stop streaming when there are no more rows
+            for item in items:
+                yield f"data: {item.to_dict()}\n\n"  # SSE format
+            offset += batch_size
+
+    return data_generator()

@@ -1,21 +1,45 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
-from app.utils.database import Base
+from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy.ext.declarative import as_declarative
+
+@as_declarative()
+class Base:
+    pass
 
 class Item(Base):
     __tablename__ = "items"
 
-    id = Column(Integer, primary_key=True, index=True, comment="Primary key ID")
-    product_id = Column(String(50), index=True, unique=True, comment="Unique product identifier")
-    type = Column(String(20), nullable=False, comment="Type of the product")
-    air_temperature = Column(Float, comment="Air temperature during operation")
-    process_temperature = Column(Float, comment="Process temperature during operation")
-    rotational_speed = Column(Integer, comment="Rotational speed in RPM")
-    torque = Column(Float, comment="Torque applied in Nm")
-    tool_wear = Column(Integer, comment="Tool wear in minutes")
-    machine_failure = Column(Boolean, default=False, comment="Indicates machine failure")
-    twf = Column(Boolean, default=False, comment="Tool wear failure")
-    hdf = Column(Boolean, default=False, comment="Heat dissipation failure")
-    pwf = Column(Boolean, default=False, comment="Power failure")
-    osf = Column(Boolean, default=False, comment="Overstrain failure")
-    rnf = Column(Boolean, default=False, comment="Random failure")
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(String, index=True)
+    type = Column(String)
+    air_temperature = Column(Float)
+    process_temperature = Column(Float)
+    rotational_speed = Column(Integer)
+    torque = Column(Float)
+    tool_wear = Column(Integer)
+    machine_failure = Column(Boolean)
+    twf = Column(Boolean)
+    hdf = Column(Boolean)
+    pwf = Column(Boolean)
+    osf = Column(Boolean)
+    rnf = Column(Boolean)
+
+    def to_dict(self):
+        """
+        Converts the model instance to a dictionary.
+        """
+        return {
+            "id": self.id,
+            "product_id": self.product_id,
+            "type": self.type,
+            "air_temperature": self.air_temperature,
+            "process_temperature": self.process_temperature,
+            "rotational_speed": self.rotational_speed,
+            "torque": self.torque,
+            "tool_wear": self.tool_wear,
+            "machine_failure": self.machine_failure,
+            "twf": self.twf,
+            "hdf": self.hdf,
+            "pwf": self.pwf,
+            "osf": self.osf,
+            "rnf": self.rnf,
+        }
