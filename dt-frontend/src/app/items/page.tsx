@@ -1,15 +1,13 @@
-import ItemsList from "../../components/ItemsList";
-import { Item } from "@/types/types";
+import ClientWrapper from "../../components/ClientWrapper";
+import WebSocketStream from "../../components/WebSocketStream";
 
-export default async function ItemsPage() {
-  const data: Item[] = await fetch("http://127.0.0.1:8000/items").then((res) =>
-    res.json()
-  );
-
+export default function ItemsPage() {
   return (
     <div>
-      <h1>Items</h1>
-      <ItemsList initialData={data} />
+      <h1>Sensor Data Streaming</h1>
+      <ClientWrapper>
+        <WebSocketStream />
+      </ClientWrapper>
     </div>
   );
 }
