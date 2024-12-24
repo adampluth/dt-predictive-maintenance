@@ -1,18 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-interface Item {
-  id: number;
-  product_id: string;
-  type: string;
-  air_temperature: number;
-  process_temperature: number;
-  rotational_speed: number;
-  torque: number;
-  tool_wear: number;
-  machine_failure: boolean;
-}
+import { Item } from "../types/types";
 
 export default function WebSocketStream() {
   const [items, setItems] = useState<Item[]>([]);
@@ -36,7 +25,9 @@ export default function WebSocketStream() {
       <ul>
         {items.map((item, index) => (
           <li key={index}>
-            {item.product_id}: {item.type}, Temp: {item.air_temperature}K
+            {item.product_id}: {item.type}, Temp: {item.air_temperature}K, 
+            Rotational Speed: {item.rotational_speed} RPM, Torque: {item.torque} Nm,
+            TWF: {item.twf ? "True" : "False"}, Machine Failure: {item.machine_failure ? "Yes" : "No"}
           </li>
         ))}
       </ul>
