@@ -1,33 +1,48 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Item } from "../types/types";
+import React, { useEffect, useState, useRef } from "react";
 
 export default function WebSocketStream() {
-  const [items, setItems] = useState<Item[]>([]);
+  const [data, setData] = useState<string[]>([]);
+  const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://127.0.0.1:8000/ws/sensor-stream/");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws/sensor-stream/");
+    wsRef.current = ws;
 
-    socket.onmessage = (event) => {
-      const newItem: Item = JSON.parse(event.data);
-      setItems((prevItems) => [newItem, ...prevItems].slice(0, 10)); // Keep the latest 10 items
+    // Handle incoming messages
+    ws.onmessage = (event) => {
+      const message = event.data;
+      setData((prevData) => {
+        const updatedData = [...prevData, message];
+        // Only keep the last 10 messages
+        return updatedData.slice(-10);
+      });
     };
 
-    socket.onerror = (error) => console.error("WebSocket error:", error);
+    // Handle errors
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
-    return () => socket.close();
+    // Cleanup WebSocket connection on unmount
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
   }, []);
 
   return (
-    <div>
-      <h2>Live Sensor Data</h2>
-      <ul>
-        {items.map((item, index) => (
-          <li key={index}>
-            {item.product_id}: {item.type}, Temp: {item.air_temperature}K, 
-            Rotational Speed: {item.rotational_speed} RPM, Torque: {item.torque} Nm,
-            TWF: {item.twf ? "True" : "False"}, Machine Failure: {item.machine_failure ? "Yes" : "No"}
+    <div className="p-4">
+      <h3 className="text-lg font-bold mb-4">Live Sensor Data</h3>
+      <ul className="space-y-2">
+        {data.map((message, index) => (
+          <li
+            key={index}
+            className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg p-3 shadow-md break-words"
+          >
+            {message}
           </li>
         ))}
       </ul>
