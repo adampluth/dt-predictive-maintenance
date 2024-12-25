@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import items_router, health_router, db_router, stream_router
 from app.utils.database import Base, engine
+
+from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data
+from threading import Thread
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -27,3 +30,12 @@ app.include_router(health_router)
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Digital Twin Backend!"}
+
+@app.on_event("startup")
+def start_mock_stream():
+    thread = Thread(target=mock_sensor_data, daemon=True)
+    thread.start()
+
+@app.websocket("/ws/sensor-stream/")
+async def sensor_stream(websocket: WebSocket):
+    await websocket_endpoint(websocket)
