@@ -12,36 +12,24 @@ const tailwindConfig: Config = {
     extend: {
       colors: {
         background: {
-          DEFAULT: "hsl(220, 15%, 12%)", // Muted dark background
-          light: "hsl(0, 0%, 95%)", // Light mode background
+          DEFAULT: "#1A1A1A", // Obsidian
+          light: "#F9FAFB", // Light mode background
         },
         foreground: {
-          DEFAULT: "hsl(0, 0%, 100%)", // Light text for dark mode
-          light: "hsl(220, 15%, 12%)", // Dark text for light mode
+          DEFAULT: "#EAEAEA", // Light text for dark mode
+          light: "#1A1A1A", // Dark text for light mode
         },
-        border: "hsl(var(--border, 220, 15%, 18%))",
+        border: "#2D2D2D", // Subtle dark border
         primary: {
           DEFAULT: "#10B981", // Emerald green
-          hover: "#0EA46A", // Slightly darker hover
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#4ADE80", // Light green
-          hover: "#3CC06C", // Hover effect
+          DEFAULT: "#06B6D4", // Bright cyan
           foreground: "#FFFFFF",
         },
-        accent: {
-          DEFAULT: "#06B6D4", // Cyan for contrast
-          hover: "#0891B2",
-          foreground: "#FFFFFF",
-        },
-        header: {
-          DEFAULT: "#1F2937", // Dark neutral background for header
-          light: "#F3F4F6", // Light mode header
-        },
-        glass: "rgba(255, 255, 255, 0.1)", // Glassmorphism
+        glass: "rgba(255, 255, 255, 0.1)", // Glassmorphic overlay
       },
-
       backdropBlur: {
         md: "12px",
       },
