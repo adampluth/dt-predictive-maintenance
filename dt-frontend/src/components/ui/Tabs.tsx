@@ -42,7 +42,13 @@ interface TabsListProps extends React.ComponentProps<"div"> {
 
 const TabsList = ({ children, className, ...props }: TabsListProps) => {
   return (
-    <div className={cn("flex space-x-4", className)} {...props}>
+    <div
+      className={cn(
+        "flex space-x-4 border-b border-border dark:border-border-dark",
+        className
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -63,12 +69,14 @@ const TabsTrigger = ({
   return (
     <button
       className={cn(
-        "px-3 py-1 text-sm font-medium",
+        "px-3 py-1 text-sm font-medium transition rounded-t-lg",
         activeValue === value
-          ? "bg-primary text-primary-foreground rounded-t-lg"
-          : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700",
+          ? "bg-primary text-primary-foreground shadow-md"
+          : "text-foreground hover:bg-muted dark:hover:bg-muted-dark",
         className
       )}
+      role="tab"
+      aria-selected={activeValue === value}
       onClick={() => setActiveValue(value)}
       {...props}
     >
@@ -90,10 +98,16 @@ const TabsContent = ({
 }: TabsContentProps) => {
   const { activeValue } = useTabsContext();
 
-  if (value !== activeValue) return null;
-
   return (
-    <div className={cn("mt-4", className)} {...props}>
+    <div
+      className={cn(
+        "mt-4 transition-opacity duration-300 bg-card text-card-foreground p-4 rounded-lg shadow-md",
+        activeValue === value ? "opacity-100" : "opacity-0 hidden",
+        className
+      )}
+      role="tabpanel"
+      {...props}
+    >
       {children}
     </div>
   );

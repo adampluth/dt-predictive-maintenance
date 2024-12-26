@@ -12,10 +12,14 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const variants = {
-    primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 shadow-sm hover:shadow-md",
-    ghost: "bg-transparent text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800",
-    glass: "bg-glass backdrop-blur-md text-white hover:backdrop-blur-lg hover:shadow-glass",
+    primary:
+      "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg",
+    secondary:
+      "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm hover:shadow-md",
+    ghost:
+      "bg-transparent text-foreground hover:bg-muted dark:hover:bg-muted-dark",
+    glass:
+      "bg-glass backdrop-blur-lg text-foreground hover:backdrop-blur-xl hover:shadow-md",
   };
 
   return (
