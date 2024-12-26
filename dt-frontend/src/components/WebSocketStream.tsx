@@ -1,33 +1,41 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Item } from "../types/types";
+import React, { useEffect, useState, useRef } from "react";
 
 export default function WebSocketStream() {
-  const [items, setItems] = useState<Item[]>([]);
+  const [data, setData] = useState<string[]>([]);
+  const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://127.0.0.1:8000/ws/sensor-stream/");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws/sensor-stream/");
+    wsRef.current = ws;
 
-    socket.onmessage = (event) => {
-      const newItem: Item = JSON.parse(event.data);
-      setItems((prevItems) => [newItem, ...prevItems].slice(0, 10)); // Keep the latest 10 items
+    ws.onmessage = (event) => {
+      const message = event.data;
+      setData((prevData) => [...prevData.slice(-9), message]); // Keep the last 10 messages
     };
 
-    socket.onerror = (error) => console.error("WebSocket error:", error);
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
-    return () => socket.close();
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
   }, []);
 
   return (
-    <div>
-      <h2>Live Sensor Data</h2>
-      <ul>
-        {items.map((item, index) => (
-          <li key={index}>
-            {item.product_id}: {item.type}, Temp: {item.air_temperature}K, 
-            Rotational Speed: {item.rotational_speed} RPM, Torque: {item.torque} Nm,
-            TWF: {item.twf ? "True" : "False"}, Machine Failure: {item.machine_failure ? "Yes" : "No"}
+    <div className="">
+      <ul className="space-y-2">
+        {data.map((message, index) => (
+          <li
+            key={index}
+            className="bg-card text-card-foreground rounded-lg shadow-sm p-6 transition-transform border border-border glass break-words"
+            // className="p-3 bg-card-foreground text-foreground rounded shadow-sm break-words"
+          >
+            {message}
           </li>
         ))}
       </ul>

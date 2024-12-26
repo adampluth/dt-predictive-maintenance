@@ -15,13 +15,13 @@ export default function ToggleSidebarButton({
   return (
     <button
       aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
-      className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 p-2 shadow-md transition-all"
+      className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 p-2 shadow-md transition-all flex items-center justify-center"
       onClick={toggleDrawer}
     >
       {isOpen ? (
-        <FiChevronLeft className="h-4 w-4" /> // Caret for closing
+        <FiChevronLeft className="h-4 w-4 transition-transform duration-200" />
       ) : (
-        <LuMenu className="h-4 w-4" /> // Hamburger for opening
+        <LuMenu className="h-4 w-4 transition-transform duration-200" />
       )}
     </button>
   );

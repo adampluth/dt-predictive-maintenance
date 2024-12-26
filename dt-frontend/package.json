@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@chakra-ui/transition": "^2.1.0",
+    "@fontsource/archivo": "^5.1.0",
     "@fontsource/inter": "^5.1.0",
     "@fontsource/nunito": "^5.1.0",
     "@reduxjs/toolkit": "^2.5.0",

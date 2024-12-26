@@ -1,65 +1,81 @@
 import type { Config } from "tailwindcss";
-import animatePlugin from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
+import { zinc, gray } from "tailwindcss/colors";
 
 const tailwindConfig: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,html}",
+    "./components/**/*.{js,ts,jsx,tsx,html}",
   ],
   theme: {
     extend: {
       colors: {
-        background: {
-          DEFAULT: "hsl(220, 15%, 12%)", // Muted dark background
-          light: "hsl(0, 0%, 95%)", // Light mode background
+        obsidian: {
+          50: "#f3f3f4",
+          100: "#e1e1e2",
+          200: "#c7c7c9",
+          300: "#a4a4a7",
+          400: "#6d6d71",
+          500: "#454548",
+          600: "#2f2f32",
+          700: "#252528",
+          800: "#1b1b1d",
+          900: "#151517",
         },
-        foreground: {
-          DEFAULT: "hsl(0, 0%, 100%)", // Light text for dark mode
-          light: "hsl(220, 15%, 12%)", // Dark text for light mode
+        gray,
+        zinc,
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
         },
-        border: "hsl(var(--border, 220, 15%, 18%))",
+        sidebar: {
+          DEFAULT: "var(--sidebar)",
+          foreground: "var(--sidebar-foreground)",
+        },
         primary: {
-          DEFAULT: "#10B981", // Emerald green
-          hover: "#0EA46A", // Slightly darker hover
-          foreground: "#FFFFFF",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
         },
-        secondary: {
-          DEFAULT: "#4ADE80", // Light green
-          hover: "#3CC06C", // Hover effect
-          foreground: "#FFFFFF",
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
         },
-        accent: {
-          DEFAULT: "#06B6D4", // Cyan for contrast
-          hover: "#0891B2",
-          foreground: "#FFFFFF",
-        },
-        header: {
-          DEFAULT: "#1F2937", // Dark neutral background for header
-          light: "#F3F4F6", // Light mode header
-        },
-        glass: "rgba(255, 255, 255, 0.1)", // Glassmorphism
-      },
-
-      backdropBlur: {
-        md: "12px",
-      },
-      boxShadow: {
-        md: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        lg: "0 6px 12px rgba(0, 0, 0, 0.15)",
-        glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
-      },
-      borderRadius: {
-        lg: "12px",
-        xl: "16px",
+        input: "var(--input)",
+        border: "var(--border)",
+        ring: "var(--ring)",
+        glass: "var(--glass)",
       },
       fontFamily: {
-        sans: ['"Inter"', "sans-serif"],
+        sans: ["Inter", "sans-serif"], // Default body font
+        header: ["Archivo", "sans-serif"], // Header font
       },
     },
   },
-  plugins: [animatePlugin],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      const newUtilities = {
+        // Normal text: dark text for light theme, light text for dark theme
+        ".text-color-standard": {
+          color: "#111827", // Equivalent to `text-gray-900`
+        },
+        ".dark .text-color-standard": {
+          color: "#f9fafb", // Equivalent to `text-gray-100`
+        },
+        // Reversed text: light text for light theme, dark text for dark theme
+        ".text-color-reverse": {
+          color: "#f9fafb", // Equivalent to `text-gray-100`
+        },
+        ".dark .text-color-reverse": {
+          color: "#111827", // Equivalent to `text-gray-900`
+        },
+      };
+
+      addUtilities(newUtilities);
+    }),
+  ],
 };
 
 export default tailwindConfig;
