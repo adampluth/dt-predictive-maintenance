@@ -32,62 +32,70 @@ A **predictive maintenance digital twin** currently in development. This is a **
 
 ---
 
-## Installation & Setup (Planned)
+## Installation & Setup
 
-### 🐳 Docker Setup (Future)
-A Docker setup will be introduced to simplify deployment. A `docker-compose.yml` file will be added to orchestrate the FastAPI backend, PostgreSQL database, and microservices. Stay tuned for updates!
+### Docker Setup
+The project is fully **Dockerized**, and `docker-compose` manages all services.
 
-### 1️⃣ Clone the Repository
-
+### **1️⃣ Clone the Repository**
 ```sh
 git clone https://github.com/adampluth/dt-predictive-maintenance.git
 cd dt-predictive-maintenance
 ```
 
-### 2️⃣ Set Up Virtual Environment
+### **2️⃣ Run Everything with Docker**
 ```sh
-python -m venv venv
-source venv/bin/activate  # macOS/Linux
-venv\Scripts\activate    # Windows
+docker-compose up --build
 ```
+This starts:
+✅ **PostgreSQL Database**
+✅ **FastAPI Backend** (port **8000**)
+✅ **Next.js Frontend** (port **3000**)
 
-### 3️⃣ Install Backend Dependencies
+After running, visit:
+- **Frontend:** [http://localhost:3000](http://localhost:3000)
+- **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
+### **Development Mode** (Live Updates Without Restarting)
+If you want to work on files **without restarting containers**, use the following setup:
+
+#### **Run Backend in Dev Mode**
 ```sh
-pip install -r requirements.txt
+docker-compose up backend
 ```
+- Backend will **auto-reload** on code changes (FastAPI `--reload` enabled).
 
-### 4️⃣ Run the FastAPI Backend (Planned)
+#### **Run Frontend in Dev Mode**
 ```sh
-cd backend
-uvicorn main:app --reload
+docker-compose up frontend
 ```
+- Next.js will **hot-reload** UI changes.
+- You can still install new dependencies using:
+  ```sh
+  docker exec -it nextjs_frontend sh
+  npm install some-package
+  exit
+  ```
 
-### 5️⃣ Set Up PostgreSQL Database (Planned)
-Ensure PostgreSQL is installed and running. Create the necessary database:
+---
+
+### **Production Deployment**
+To serve the project without development tools:
 ```sh
-psql -U your_user -d your_database -f database/schema.sql
+docker-compose -f docker-compose.yml up -d
 ```
+This runs everything **in detached mode**, so it stays up in the background.
 
-### 6️⃣ Run the Microservice (Planned)
+To stop the services:
 ```sh
-python microservice/main.py
-```
-
-### 7️⃣ Install Frontend Dependencies
-```sh
-cd frontend
-npm install
-```
-
-### 8️⃣ Run the Next.js Frontend (Planned)
-```sh
-npm run dev
+docker-compose down
 ```
 
 ---
 
 ## Future Plans
-- **Introduce Docker for simplified deployment.**
 - **Develop real-time ML anomaly detection.**
 - **Enhance Plotly.js visualizations for better insights.**
 - **Refine the data microservice for higher fidelity simulations.**
