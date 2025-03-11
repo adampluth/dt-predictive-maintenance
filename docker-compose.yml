@@ -16,17 +16,34 @@ services:
       - app-network
 
   backend:
-    build: .
+    build: ./dt-backend  # Updated to reflect correct path
     container_name: fastapi_backend
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql+psycopg2://apluth:evergreen@postgres_container:5432/dt_data
-
     depends_on:
       - db
     networks:
       - app-network
+    volumes:
+      - ./dt-backend:/app
+
+  frontend:
+    build: ./dt-frontend  # Updated to reflect correct path
+    container_name: nextjs_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    volumes:
+      - ./dt-frontend:/app
+      - /app/node_modules
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8000
+    command: npm run dev
 
 volumes:
   postgres-data:
