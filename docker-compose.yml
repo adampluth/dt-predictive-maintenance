@@ -16,8 +16,10 @@ services:
       - app-network
 
   backend:
-    build: ./dt-backend  # Updated to reflect correct path
+    build: ./dt-backend
     container_name: fastapi_backend
+    volumes:
+      - ./dt-backend:/app  # Mount backend source code
     ports:
       - "8000:8000"
     environment:
@@ -26,21 +28,20 @@ services:
       - db
     networks:
       - app-network
-    volumes:
-      - ./dt-backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
-    build: ./dt-frontend  # Updated to reflect correct path
+    build: ./dt-frontend
     container_name: nextjs_frontend
+    volumes:
+      - ./dt-frontend:/app  # Mount frontend code
+      - /app/node_modules  # Prevent overwriting node_modules
     ports:
       - "3000:3000"
     depends_on:
       - backend
     networks:
       - app-network
-    volumes:
-      - ./dt-frontend:/app
-      - /app/node_modules
     environment:
       NEXT_PUBLIC_API_URL: http://backend:8000
     command: npm run dev
