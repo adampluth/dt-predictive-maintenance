@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import items_router, health_router, db_router, stream_router
+from app.routers import items_router, health_router, db_router, stream_router, session_router
 from app.utils.database import Base, engine
 
 from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data
@@ -26,6 +26,7 @@ app.include_router(items_router)
 app.include_router(db_router)
 app.include_router(stream_router)
 app.include_router(health_router)
+app.include_router(session_router.router)
 
 @app.get("/")
 def read_root():

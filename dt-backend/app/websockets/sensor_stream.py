@@ -1,7 +1,9 @@
 from fastapi import WebSocket, WebSocketDisconnect
+from sqlalchemy.orm import Session
+from app.utils.database import SessionLocal  # Import database session
+from app.models import Item, Session as SessionModel
 from random import uniform, choice
 from time import sleep
-from threading import Thread
 import asyncio
 
 class ConnectionManager:
@@ -22,9 +24,17 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 def mock_sensor_data():
+    db = SessionLocal()  # Start a new database session
+
+    # Create a new session for this data stream
+    session = SessionModel(status="active")
+    db.add(session)
+    db.commit()
+    session_id = session.id
+
     while True:
         data = {
-            "id": choice(range(1, 11)),  # Mock item IDs
+            "session_id": session_id,
             "product_id": f"M{choice(range(10000, 99999))}",
             "type": choice(["M", "L"]),
             "air_temperature": round(uniform(298, 310), 2),
@@ -34,7 +44,15 @@ def mock_sensor_data():
             "tool_wear": choice(range(0, 100)),
             "machine_failure": choice([True, False]),
         }
-        asyncio.run(manager.broadcast(data))  # Broadcast data to WebSocket clients
+
+        # Save to database
+        sensor_entry = Item(**data)
+        db.add(sensor_entry)
+        db.commit()
+
+        # Broadcast to WebSocket clients
+        asyncio.run(manager.broadcast(data))
+
         sleep(1)
 
 async def websocket_endpoint(websocket: WebSocket):
