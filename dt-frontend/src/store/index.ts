@@ -6,14 +6,14 @@ import drawerReducer from "./slices/drawerSlice";
 
 export const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer, // Add RTK Query reducer
+    [api.reducerPath]: api.reducer,
     drawer: drawerReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware), // Add RTK Query middleware
+    getDefaultMiddleware().concat(api.middleware),
 });
 
-// Optional: Setup listeners for cache updates
+// Setup listeners for cache updates
 setupListeners(store.dispatch);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

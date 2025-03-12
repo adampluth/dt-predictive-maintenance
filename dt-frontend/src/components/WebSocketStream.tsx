@@ -1,40 +1,43 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
+import { useStreamSensorDataQuery, useGetCurrentSessionQuery } from "@/services/api";
+import SessionControls from "./SessionControls";
 
 export default function WebSocketStream() {
-  const [data, setData] = useState<string[]>([]);
-  const wsRef = useRef<WebSocket | null>(null);
+  const [isStreaming, setIsStreaming] = useState(false);
 
-  useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/sensor-stream/");
-    wsRef.current = ws;
+  // RTK Query should now update this automatically
+  const { data: sessionData } = useGetCurrentSessionQuery();
 
-    ws.onmessage = (event) => {
-      const message = event.data;
-      setData((prevData) => [...prevData.slice(-9), message]); // Keep the last 10 messages
-    };
+  // Fetch WebSocket data only when streaming is active
+  const { data = [] } = useStreamSensorDataQuery(undefined, { skip: !isStreaming });
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+  function handleStartSession() {
+    setIsStreaming(true);
+  }
 
-    return () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.close();
-      }
-    };
-  }, []);
+  function handleEndSession() {
+    setIsStreaming(false);
+  }
 
   return (
-    <div className="">
-      <ul className="space-y-2">
+    <div>
+      <SessionControls onStartSession={handleStartSession} onEndSession={handleEndSession} />
+
+      {/* Show session ID only if exists */}
+      {sessionData?.session_id ? (
+        <p className="text-lg font-semibold text-green-500">
+          Current Session ID: {sessionData.session_id}
+        </p>
+      ) : (
+        <p className="text-lg font-semibold text-gray-500">No Active Session</p>
+      )}
+
+      {/* WebSocket Messages */}
+      <ul className="space-y-2 mt-4">
         {data.map((message, index) => (
-          <li
-            key={index}
-            className="bg-card text-card-foreground rounded-lg shadow-sm p-6 transition-transform border border-border glass break-words"
-            // className="p-3 bg-card-foreground text-foreground rounded shadow-sm break-words"
-          >
+          <li key={index} className="bg-card text-card-foreground rounded-lg shadow-sm p-6 border border-border glass break-words">
             {message}
           </li>
         ))}

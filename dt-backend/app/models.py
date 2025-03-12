@@ -1,14 +1,23 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean
-from sqlalchemy.ext.declarative import as_declarative
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, TIMESTAMP, func
+from sqlalchemy.orm import relationship
+from app.utils.database import Base
 
-@as_declarative()
-class Base:
-    pass
+class Session(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    start_time = Column(TIMESTAMP, default=func.now())
+    end_time = Column(TIMESTAMP, nullable=True)
+    status = Column(String, default="active")  # active, completed, etc.
+
+    # Relationship to sensor data
+    sensor_data = relationship("Item", back_populates="session", cascade="all, delete-orphan")
 
 class Item(Base):
     __tablename__ = "items"
 
     id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(Integer, ForeignKey("sessions.id", ondelete="CASCADE"), nullable=True)
     product_id = Column(String, index=True)
     type = Column(String)
     air_temperature = Column(Float)
@@ -23,23 +32,5 @@ class Item(Base):
     osf = Column(Boolean)
     rnf = Column(Boolean)
 
-    def to_dict(self):
-        """
-        Converts the model instance to a dictionary.
-        """
-        return {
-            "id": self.id,
-            "product_id": self.product_id,
-            "type": self.type,
-            "air_temperature": self.air_temperature,
-            "process_temperature": self.process_temperature,
-            "rotational_speed": self.rotational_speed,
-            "torque": self.torque,
-            "tool_wear": self.tool_wear,
-            "machine_failure": self.machine_failure,
-            "twf": self.twf,
-            "hdf": self.hdf,
-            "pwf": self.pwf,
-            "osf": self.osf,
-            "rnf": self.rnf,
-        }
+    # Define relationship back to Session
+    session = relationship("Session", back_populates="sensor_data")
