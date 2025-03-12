@@ -1,4 +1,4 @@
-# DT Predictive Maintenance + Cybersecurity
+# Premonition-Industrial-AI: Predictive Maintenance, AI-driven Analytics, Cybersecurity, & Digital Twin
 
 A **Predictive Maintenance Digital Twin** designed to **simulate industrial processes, detect failures, and track cyber events**.
 
@@ -8,9 +8,9 @@ Features real-time machine learning analysis, cybersecurity attack tracking, and
 - **FastAPI Backend** (API & WebSocket streaming) ✅ Implemented
 - **Next.js Frontend (DaisyUI & TailwindCSS)** ✅ Implemented
 - **PostgreSQL Database** (Sensor & Cybersecurity Data) ✅ Implemented
-- **Machine Learning (Anomaly Detection + Forecasting)** ⚠️ In Progress
+- **AI-driven analytics (Anomaly Detection + Forecasting)** ⚠️ In Progress
 - **MITRE ATT&CK ICS Cyber Event Tracking** ⚠️ In Progress
-- **Apache Kafka for Real-Time Cyber Events & ML Insights** ⏳ Planned (Phase 2)
+- **Apache Kafka for Real-Time Cyber Events & AI-driven analytics Insights** ⏳ Planned (Phase 2)
 
 ---
 
@@ -19,9 +19,9 @@ Features real-time machine learning analysis, cybersecurity attack tracking, and
 - **Digital Twin for Predictive Maintenance** – Simulates real-world industrial sensor data. ✅ Implemented
 - **Cybersecurity Event Tracking** – Uses **MITRE ATT&CK ICS** to **detect cyber threats**. ⚠️ In Progress
 - **FastAPI + WebSockets** – Manages real-time sensor & cyber event streaming. ✅ Implemented
-- **PostgreSQL Database** – Stores sensor data & ML-based anomaly detection results. ✅ Implemented
+- **PostgreSQL Database** – Stores sensor data & AI-driven analytics-based anomaly detection results. ✅ Implemented
 - **Next.js Frontend (DaisyUI + TailwindCSS)** – Provides an interactive UI/UX for monitoring. ✅ Implemented
-- **Real-Time Machine Learning** – Runs **Isolation Forest, Apache Prophet, & anomaly detection models** in Python. ⚠️ In Progress
+- **Real-Time AI-driven analytics** – Runs **Isolation Forest, Apache Prophet, & anomaly detection models** in Python. ⚠️ In Progress
 - **Apache Kafka Integration** (🚀 Phase 2) – Will power real-time cyber attack processing. ⏳ Planned
 
 ---
@@ -33,7 +33,7 @@ Features real-time machine learning analysis, cybersecurity attack tracking, and
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 /src
@@ -41,7 +41,7 @@ Features real-time machine learning analysis, cybersecurity attack tracking, and
  ├── backend       # FastAPI backend (APIs & WebSockets) ✅ Implemented
  ├── database      # PostgreSQL database setup ✅ Implemented
  ├── frontend      # Next.js app (DaisyUI + TailwindCSS) ✅ Implemented
- ├── notebook      # Jupyter Notebook for ML experiments ⚠️ In Progress
+ ├── notebook      # Jupyter Notebook for AI-driven analytics experiments ⚠️ In Progress
  ├── ml_analysis   # Anomaly detection & forecasting (Isolation Forest, Apache Prophet) ⚠️ In Progress
  ├── kafka_streams # Apache Kafka for real-time cyber event processing (Phase 2) ⏳ Planned
 ```
@@ -55,8 +55,8 @@ The project is fully **Dockerized**, and `docker-compose` manages all services.
 
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/adampluth/dt-predictive-maintenance.git
-cd dt-predictive-maintenance
+git clone https://github.com/adampluth/premonition-industrial-ai.git
+cd premonition-industrial-ai
 ```
 
 ### **2️⃣ Run Everything with Docker**
@@ -98,7 +98,7 @@ exit
 ---
 
 ## Future Plans
-- **Complete real-time ML anomaly detection & forecasting.** ⚠️ In Progress
+- **Complete real-time AI-driven analytics anomaly detection & forecasting.** ⚠️ In Progress
 - **Enhance Plotly.js visualizations for predictive insights.** ⏳ Planned
 - **Simulate MITRE ATT&CK-based cyber attack scenarios.** ⚠️ In Progress
 - **Optimize Next.js performance for interactive monitoring.** ⏳ Planned
