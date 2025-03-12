@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import items_router, health_router, db_router, stream_router, session_router
+from app.routers import items_router, health_router, db_router, stream_router, session_router, cyber_events
 from app.utils.database import Base, engine, SessionLocal
 from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data, stop_signal
 import threading
@@ -28,6 +28,7 @@ app.include_router(db_router)
 app.include_router(stream_router)
 app.include_router(health_router)
 app.include_router(session_router.router)
+app.include_router(cyber_events.router)
 
 @app.get("/")
 def read_root():
