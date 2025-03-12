@@ -1,7 +1,7 @@
 import logging
 import threading
 from threading import Thread
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.utils.database import get_db, SessionLocal
 from app.models import Session as SessionModel
@@ -27,6 +27,13 @@ def start_sensor_thread():
     sensor_thread.start()
     logging.info("Sensor data thread started.")
 
+@router.get("/current")
+async def get_current_session(db: Session = Depends(get_db)):
+    session = db.query(SessionModel).filter(SessionModel.status == "active").first()
+    if session:
+        return {"session_id": session.id}
+    return {"session_id": None}  # Explicitly return None if no active session
+    
 @router.post("/start")
 def start_session(db: Session = Depends(get_db)):
     """
