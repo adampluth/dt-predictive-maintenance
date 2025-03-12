@@ -1,10 +1,11 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import items_router, health_router, db_router, stream_router, session_router
-from app.utils.database import Base, engine
-
-from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data
+from app.utils.database import Base, engine, SessionLocal
+from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data, stop_signal
+import threading
 from threading import Thread
+from app.models import Session as SessionModel
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -32,10 +33,15 @@ app.include_router(session_router.router)
 def read_root():
     return {"message": "Welcome to the Digital Twin Backend!"}
 
+# Ensure all sessions are set to inactive on startup
 @app.on_event("startup")
-def start_mock_stream():
-    thread = Thread(target=mock_sensor_data, daemon=True)
-    thread.start()
+def reset_sessions():
+    db = SessionLocal()
+    db.query(SessionModel).filter(SessionModel.status == "active").update({"status": "inactive"})
+    db.commit()
+    db.close()
+    stop_signal.set()  # Ensure sensor thread is stopped
+    print("All active sessions marked as inactive. Sensor streaming prevented until explicitly started.")
 
 @app.websocket("/ws/sensor-stream/")
 async def sensor_stream(websocket: WebSocket):

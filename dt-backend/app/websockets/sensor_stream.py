@@ -1,10 +1,11 @@
 from fastapi import WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
-from app.utils.database import SessionLocal  # Import database session
-from app.models import Item, Session as SessionModel
 from random import uniform, choice
 from time import sleep
 import asyncio
+import threading
+from app.utils.database import SessionLocal
+from app.models import Session as SessionModel
 
 class ConnectionManager:
     def __init__(self):
@@ -23,18 +24,27 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+# Stop signal for controlling sensor streaming
+stop_signal = threading.Event()
+
 def mock_sensor_data():
-    db = SessionLocal()  # Start a new database session
+    """
+    Generates and broadcasts mock sensor data every second.
+    Stops when stop_signal is set or if no session is active.
+    """
+    db = SessionLocal()
+    
+    while not stop_signal.is_set():
+        db.expire_all()  # Refreshes session data to avoid cache issues
+        active_session = db.query(SessionModel).filter(SessionModel.status == "active").first()
+        
+        if not active_session:
+            print("⏸ No active session. Sleeping...")
+            sleep(1)
+            continue  # Skip generating data if no active session exists
 
-    # Create a new session for this data stream
-    session = SessionModel(status="active")
-    db.add(session)
-    db.commit()
-    session_id = session.id
-
-    while True:
         data = {
-            "session_id": session_id,
+            "id": choice(range(1, 11)),
             "product_id": f"M{choice(range(10000, 99999))}",
             "type": choice(["M", "L"]),
             "air_temperature": round(uniform(298, 310), 2),
@@ -44,21 +54,15 @@ def mock_sensor_data():
             "tool_wear": choice(range(0, 100)),
             "machine_failure": choice([True, False]),
         }
-
-        # Save to database
-        sensor_entry = Item(**data)
-        db.add(sensor_entry)
-        db.commit()
-
-        # Broadcast to WebSocket clients
         asyncio.run(manager.broadcast(data))
-
         sleep(1)
+
+    print("Stopped sensor data stream")  # Log when the thread stops
 
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            await websocket.receive_text()  # Keep the WebSocket connection alive
+            await websocket.receive_text()  # Keeps the connection alive
     except WebSocketDisconnect:
         manager.disconnect(websocket)
