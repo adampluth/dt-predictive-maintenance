@@ -16,7 +16,7 @@ export default function SessionControls({ onStartSession, onEndSession }: Sessio
   const { data: currentSession } = useGetCurrentSessionQuery();
 
   useEffect(() => {
-    console.log("🛠️ Session API Response Updated:", currentSession);
+    console.log("Session API Response Updated:", currentSession);
     setSessionId(currentSession?.session_id ?? null);
   }, [currentSession]);
 

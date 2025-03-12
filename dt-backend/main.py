@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from app.api import graphs
 from app.routers import items_router, health_router, db_router, stream_router, session_router, cyber_events
 from app.utils.database import Base, engine, SessionLocal
 from app.websockets.sensor_stream import websocket_endpoint, mock_sensor_data, stop_signal
@@ -29,10 +30,11 @@ app.include_router(stream_router)
 app.include_router(health_router)
 app.include_router(session_router.router)
 app.include_router(cyber_events.router)
+app.include_router(graphs.router, prefix="/api")
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Digital Twin Backend!"}
+    return {"message": "Welcome to the Premonition Industrial AI Digital Twin!"}
 
 # Ensure all sessions are set to inactive on startup
 @app.on_event("startup")
