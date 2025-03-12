@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 # Base schema shared by create and response
 class ItemBase(BaseModel):
@@ -26,3 +27,18 @@ class ItemResponse(ItemBase):
 
     class Config:
         orm_mode = True
+
+# Schema for creating a Cyber Event
+class CyberEventCreate(BaseModel):
+    session_id: int
+    attack_type: str
+    description: str
+
+# Schema for returning Cyber Events
+class CyberEventResponse(CyberEventCreate):
+    id: int
+    timestamp: datetime
+
+    class Config:
+        orm_mode = True
+        

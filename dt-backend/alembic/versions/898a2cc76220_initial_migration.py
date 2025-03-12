@@ -77,7 +77,7 @@ def upgrade() -> None:
                existing_type=sa.BOOLEAN(),
                comment='Random failure',
                existing_nullable=True)
-    op.drop_index('ix_items_product_id', table_name='items')
+#    op.drop_index('ix_items_product_id', table_name='items')
     op.create_index(op.f('ix_items_product_id'), 'items', ['product_id'], unique=True)
     # ### end Alembic commands ###
 
