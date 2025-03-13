@@ -181,13 +181,13 @@ const DynamicGraphs: React.FC = () => {
     <div className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {fieldsToGraph.map(({ key, title }) => (
-          <div key={key} className="p-4 border rounded shadow-md bg-white dark:bg-gray-800 min-h-[300px] h-[400px]">
+          <div key={key} className="card p-4 border rounded shadow-md bg-white dark:bg-gray-800 min-h-[300px] h-[400px]">
             <div className="flex justify-between">
               <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">{title}</h3>
             </div>
             <div className="flex gap-2 mb-2">
               {Object.keys(timeRanges).map((range) => (
-                <button key={range} onClick={() => handleRangeSelection(key, range)} className={`px-2 py-1 rounded ${selectedRange.current[key] === range ? "bg-blue-500 text-white" : "bg-gray-200 dark:bg-gray-700"}`}>
+                <button key={range} onClick={() => handleRangeSelection(key, range)} className={`btn ${selectedRange.current[key] === range ? "btn-primary" : "btn-primary opacity-70"}`}>
                   {range}
                 </button>
               ))}

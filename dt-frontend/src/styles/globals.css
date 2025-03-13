@@ -1,11 +1,37 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
 
-/* Core Theme Variables */
+/* ✅ Light Theme */
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #10b981;
+  --color-secondary: #3b82f6;
+  --color-accent: #f43f5e;
+  --color-neutral: var(--zinc-50);
+  --color-base-100: var(--zinc-50);
+  --color-base-200: var(--zinc-100);
+  --color-base-300: var(--zinc-200);
+  --color-base-content: var(--zinc-900);
+}
+
+/* ✅ Dark Theme (Now Uses Obsidian Colors) */
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #10b981;
+  --color-secondary: #3b82f6;
+  --color-accent: #f43f5e;
+  --color-neutral: var(--obsidian-900);
+  --color-base-100: var(--obsidian-900);
+  --color-base-200: var(--obsidian-800);
+  --color-base-300: var(--obsidian-700);
+  --color-base-content: var(--obsidian-100);
+}
+
+/* ✅ Define Obsidian & Zinc Colors */
 @layer base {
   :root {
-    /* Zinc Palette */
+    /* 🎨 Zinc Palette */
     --zinc-50: #f8f9fa;
     --zinc-100: #f1f5f9;
     --zinc-200: #e5e7eb;
@@ -17,7 +43,7 @@
     --zinc-800: #1f2937;
     --zinc-900: #111827;
 
-    /* Obsidian Palette */
+    /* 🎨 Obsidian Palette */
     --obsidian-50: #f3f3f4;
     --obsidian-100: #e1e1e2;
     --obsidian-200: #c7c7c9;
@@ -29,67 +55,88 @@
     --obsidian-800: #1b1b1d;
     --obsidian-900: #151517;
 
-    /* Core Variables */
-    --background: var(--zinc-50);
-    --foreground: var(--zinc-900);
-    --card: var(--zinc-100);
-    --card-foreground: var(--zinc-900);
-    --sidebar: var(--zinc-50);
-    --sidebar-foreground: var(--zinc-900);
-    --primary: #10b981;
-    --primary-foreground: #ffffff;
-    --muted: var(--zinc-200);
-    --muted-foreground: var(--zinc-500);
+    /* ✅ Other Variables */
     --glass: rgba(255, 255, 255, 0.1);
     --border: var(--zinc-300);
     --input: var(--zinc-100);
     --ring: var(--zinc-400);
   }
-
-  .dark {
-    --background: var(--obsidian-900);
-    --foreground: var(--obsidian-100);
-    --card: var(--obsidian-800);
-    --card-foreground: var(--obsidian-100);
-    --sidebar: var(--obsidian-800);
-    --sidebar-foreground: var(--obsidian-200);
-    --primary: #10b981;
-    --primary-foreground: #ffffff;
-    --muted: var(--obsidian-700);
-    --muted-foreground: var(--obsidian-200);
-    --glass: rgba(0, 0, 0, 0.3);
-    --border: var(--obsidian-700);
-    --input: var(--obsidian-800);
-    --ring: var(--obsidian-600);
-  }
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.1); /* Adjust transparency */
-  backdrop-filter: blur(12px); /* Blur effect */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-  border-radius: 0.5rem; /* Border radius */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+/* ✅ Apply Obsidian Colors in Dark Mode */
+[data-theme="dark"] {
+  --background: var(--obsidian-900);
+  --foreground: var(--obsidian-100);
+  --card: var(--obsidian-800);
+  --card-foreground: var(--obsidian-100);
+  --sidebar: var(--obsidian-800);
+  --sidebar-foreground: var(--obsidian-200);
+  --primary-foreground: #ffffff;
+  --muted: var(--obsidian-700);
+  --muted-foreground: var(--obsidian-200);
+  --glass: var(--glass);
+  --border: var(--obsidian-700);
+  --input: var(--obsidian-800);
+  --ring: var(--obsidian-600);
 }
 
-.dark .glass {
-  background: rgba(0, 0, 0, 0.2); /* Darker background for dark mode */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Adjusted border */
+/* ✅ Manually Define Utility Classes for Tailwind */
+@layer utilities {
+  /* ✅ Light Mode */
+  /* [data-theme="light"] .bg-zinc-50 { background-color: var(--zinc-50); }
+  [data-theme="light"] .bg-zinc-100 { background-color: var(--zinc-100); }
+  [data-theme="light"] .bg-zinc-200 { background-color: var(--zinc-200); }
+  [data-theme="light"] .bg-zinc-300 { background-color: var(--zinc-300); }
+  [data-theme="light"] .bg-zinc-400 { background-color: var(--zinc-400); }
+  [data-theme="light"] .bg-zinc-500 { background-color: var(--zinc-500); }
+  [data-theme="light"] .bg-zinc-600 { background-color: var(--zinc-600); }
+  [data-theme="light"] .bg-zinc-700 { background-color: var(--zinc-700); }
+  [data-theme="light"] .bg-zinc-800 { background-color: var(--zinc-800); }
+  [data-theme="light"] .bg-zinc-900 { background-color: var(--zinc-900); } */
+
+  /* ✅ Dark Mode */
+  [data-theme="dark"] .bg-obsidian-50 { background-color: var(--obsidian-50); }
+  [data-theme="dark"] .bg-obsidian-100 { background-color: var(--obsidian-100); }
+  [data-theme="dark"] .bg-obsidian-200 { background-color: var(--obsidian-200); }
+  [data-theme="dark"] .bg-obsidian-300 { background-color: var(--obsidian-300); }
+  [data-theme="dark"] .bg-obsidian-400 { background-color: var(--obsidian-400); }
+  [data-theme="dark"] .bg-obsidian-500 { background-color: var(--obsidian-500); }
+  [data-theme="dark"] .bg-obsidian-600 { background-color: var(--obsidian-600); }
+  [data-theme="dark"] .bg-obsidian-700 { background-color: var(--obsidian-700); }
+  [data-theme="dark"] .bg-obsidian-800 { background-color: var(--obsidian-800); }
+  [data-theme="dark"] .bg-obsidian-900 { background-color: var(--obsidian-900); }
 }
 
-/* General Body Styling */
+.bg-obsidian-50 { background-color: var(--obsidian-50); }
+.bg-obsidian-100 { background-color: var(--obsidian-100); }
+.bg-obsidian-200 { background-color: var(--obsidian-200); }
+.bg-obsidian-300 { background-color: var(--obsidian-300); }
+.bg-obsidian-400 { background-color: var(--obsidian-400); }
+.bg-obsidian-500 { background-color: var(--obsidian-500); }
+.bg-obsidian-600 { background-color: var(--obsidian-600); }
+.bg-obsidian-700 { background-color: var(--obsidian-700); }
+.bg-obsidian-800 { background-color: var(--obsidian-800); }
+.bg-obsidian-900 { background-color: var(--obsidian-900); }
+
+/* ✅ Ensure DaisyUI Picks Up These Variables */
 @layer base {
   body {
-    @apply font-sans bg-background text-foreground;
+    font-family: theme("fontFamily.sans");
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
 
-.js-plotly-plot .plotly .modebar svg {
-	display: inline;
-
+/* ✅ Glass Effect */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.js-plotly-plot .plotly .modebar .modebar-group {
-padding-bottom: 8px;
-
+[data-theme="dark"] .glass {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
