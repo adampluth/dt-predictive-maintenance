@@ -1,5 +1,4 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
 
 interface TabsProps extends React.ComponentProps<"div"> {
   defaultValue: string;
@@ -16,7 +15,7 @@ const Tabs = ({ defaultValue, children, ...props }: TabsProps) => {
 
   return (
     <TabsContext.Provider value={contextValue}>
-      <div className={''} {...props}>
+      <div className="tabs tabs-boxed flex flex-col bg-base-300 p-2 rounded-xl" {...props}>
         {children}
       </div>
     </TabsContext.Provider>
@@ -40,15 +39,9 @@ interface TabsListProps extends React.ComponentProps<"div"> {
   children: React.ReactNode;
 }
 
-const TabsList = ({ children, className, ...props }: TabsListProps) => {
+const TabsList = ({ children, ...props }: TabsListProps) => {
   return (
-    <div
-      className={cn(
-        "flex space-x-4 border-b border-border dark:border-border-dark",
-        className
-      )}
-      {...props}
-    >
+    <div className="tabs w-full flex justify-start" {...props}>
       {children}
     </div>
   );
@@ -61,20 +54,16 @@ interface TabsTriggerProps extends React.ComponentProps<"button"> {
 const TabsTrigger = ({
   value,
   children,
-  className,
+  className = "",
   ...props
 }: TabsTriggerProps) => {
   const { activeValue, setActiveValue } = useTabsContext();
 
   return (
     <button
-      className={cn(
-        "px-3 py-1 text-sm font-medium transition rounded-t-lg cursor-pointer",
-        activeValue === value
-          ? "bg-primary text-primary-foreground shadow-md"
-          : "text-foreground hover:bg-muted dark:hover:bg-muted-dark",
-        className
-      )}
+      className={`tab transition px-4 py-2 text-sm font-medium cursor-pointer rounded-t-lg ${
+        activeValue === value ? "tab-active bg-primary text-primary-content shadow-md" : "hover:bg-base-200"
+      } ${className}`}
       role="tab"
       aria-selected={activeValue === value}
       onClick={() => setActiveValue(value)}
@@ -93,18 +82,16 @@ interface TabsContentProps extends React.ComponentProps<"div"> {
 const TabsContent = ({
   value,
   children,
-  className,
+  className = "",
   ...props
 }: TabsContentProps) => {
   const { activeValue } = useTabsContext();
 
   return (
     <div
-      className={cn(
-        "mt-4 transition-opacity duration-300 bg-card text-card-foreground p-4 rounded-lg shadow-md",
-        activeValue === value ? "opacity-100" : "opacity-0 hidden",
-        className
-      )}
+      className={`tab-content p-4 bg-base-200 rounded-lg shadow-md transition-opacity duration-300 ${
+        activeValue === value ? "block opacity-100" : "hidden opacity-0"
+      } ${className}`}
       role="tabpanel"
       {...props}
     >

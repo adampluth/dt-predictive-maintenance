@@ -4,18 +4,17 @@ import { LuSun, LuMoon } from "react-icons/lu";
 import { useState, useEffect } from "react";
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState("light"); // Default to light mode
-  const [mounted, setMounted] = useState(false); // ✅ Prevent hydration error
+  const [theme, setTheme] = useState("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // ✅ Ensure client-side execution
+    // Ensure client-side execution
     const storedTheme = localStorage.getItem("theme") || "light";
     setTheme(storedTheme);
     document.documentElement.setAttribute("data-theme", storedTheme);
-    setMounted(true); // ✅ Now safe to render UI
+    setMounted(true);
   }, []);
 
-  // ✅ Fix hydration issue: Don't render button until mounted
   if (!mounted) return null;
 
   const toggleTheme = () => {
