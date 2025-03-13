@@ -83,3 +83,13 @@
     @apply font-sans bg-background text-foreground;
   }
 }
+
+.js-plotly-plot .plotly .modebar svg {
+	display: inline;
+
+}
+
+.js-plotly-plot .plotly .modebar .modebar-group {
+padding-bottom: 8px;
+
+}
