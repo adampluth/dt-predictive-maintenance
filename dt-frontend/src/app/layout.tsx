@@ -13,7 +13,7 @@ import Sidebar from "@/components/Sidebar";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <title>My Dashboard</title>
         <meta charSet="UTF-8" />

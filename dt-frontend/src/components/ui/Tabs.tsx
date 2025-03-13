@@ -6,7 +6,7 @@ interface TabsProps extends React.ComponentProps<"div"> {
   children: React.ReactNode;
 }
 
-const Tabs = ({ defaultValue, children, className, ...props }: TabsProps) => {
+const Tabs = ({ defaultValue, children, ...props }: TabsProps) => {
   const [activeValue, setActiveValue] = React.useState(defaultValue);
 
   const contextValue = React.useMemo(
@@ -16,7 +16,7 @@ const Tabs = ({ defaultValue, children, className, ...props }: TabsProps) => {
 
   return (
     <TabsContext.Provider value={contextValue}>
-      <div className={cn("tabs", className)} {...props}>
+      <div className={''} {...props}>
         {children}
       </div>
     </TabsContext.Provider>
@@ -69,7 +69,7 @@ const TabsTrigger = ({
   return (
     <button
       className={cn(
-        "px-3 py-1 text-sm font-medium transition rounded-t-lg",
+        "px-3 py-1 text-sm font-medium transition rounded-t-lg cursor-pointer",
         activeValue === value
           ? "bg-primary text-primary-foreground shadow-md"
           : "text-foreground hover:bg-muted dark:hover:bg-muted-dark",
