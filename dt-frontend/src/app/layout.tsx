@@ -19,14 +19,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body>
+      <body className="flex">
         <ReduxProvider store={store}>
-          <div className="flex flex-col h-screen">
+          <Sidebar />
+          <div className="flex flex-col flex-1 h-screen">
             <Header />
-            <div className="flex flex-1">
-              <Sidebar />
-              <MainContent>{children}</MainContent>
-            </div>
+            <MainContent>{children}</MainContent>
           </div>
         </ReduxProvider>
       </body>
