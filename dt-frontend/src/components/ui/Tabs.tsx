@@ -1,16 +1,39 @@
+"use client";
+
 import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface TabsProps extends React.ComponentProps<"div"> {
-  defaultValue: string;
   children: React.ReactNode;
+  defaultValue: string;
+  onValueChange?: (value: string) => void;
 }
 
-const Tabs = ({ defaultValue, children, ...props }: TabsProps) => {
-  const [activeValue, setActiveValue] = React.useState(defaultValue);
+const validTabs = ["monitoring", "analytics", "cybersecurity", "streaming"];
 
+const Tabs = ({ defaultValue, onValueChange, children, ...props }: TabsProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Extract active tab from URL
+  let activeValue = pathname?.split("/").pop();
+  if (!activeValue || !validTabs.includes(activeValue)) {
+    activeValue = defaultValue;
+  }
+
+  // Fix: Correct `setActiveValue` implementation
+  const setActiveValue = React.useCallback(
+    (value: string) => {
+      router.push(`/dashboard/${value}`);
+      if (onValueChange) onValueChange(value);
+    },
+    [router, onValueChange]
+  );
+
+  // Provide context to child components
   const contextValue = React.useMemo(
     () => ({ activeValue, setActiveValue }),
-    [activeValue]
+    [activeValue, setActiveValue]
   );
 
   return (

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { useStreamSensorDataQuery } from "@/services/api";
 import { Layout } from "plotly.js-basic-dist";
+import Card from "@/components/ui/Card";
 
 interface SensorData {
   air_temperature: number;
@@ -37,7 +38,12 @@ const DynamicGraphs: React.FC = () => {
   const plotlyRef = useRef<typeof import("plotly.js-basic-dist") | null>(null);
   const [streamData, setStreamData] = useState<SensorData[]>([]);
   const manualZoom = useRef<Record<string, boolean>>({});
-  const selectedRange = useRef<Record<string, string>>({});
+  const selectedRange = useRef<Record<string, string>>(
+    fieldsToGraph.reduce((acc, { key }) => {
+      acc[key] = "All";
+      return acc;
+    }, {} as Record<string, string>)
+  );  
   const uirevisionRef = useRef<Record<string, number>>({});
 
   const setGraphRef = useCallback((key: string, el: HTMLDivElement | null) => {
@@ -47,7 +53,7 @@ const DynamicGraphs: React.FC = () => {
   const resetView = (key: string) => {
     uirevisionRef.current[key] = (uirevisionRef.current[key] || 0) + 1;
     manualZoom.current[key] = false;
-    selectedRange.current[key] = "All"; // ✅ Reset to "All"
+    selectedRange.current[key] = "All";
   };
 
   const handleRangeSelection = (key: string, range: string) => {
@@ -72,7 +78,6 @@ const DynamicGraphs: React.FC = () => {
       "xaxis.range": [startTime, endTime]
     });
 
-    // ✅ Reset zooming if "All" is clicked
     if (range === "All") {
       manualZoom.current[key] = false;
       resetView(key); 
@@ -181,19 +186,27 @@ const DynamicGraphs: React.FC = () => {
     <div className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {fieldsToGraph.map(({ key, title }) => (
-          <div key={key} className="card p-4 border rounded shadow-md bg-white dark:bg-gray-800 min-h-[300px] h-[400px]">
-            <div className="flex justify-between">
-              <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">{title}</h3>
-            </div>
-            <div className="flex gap-2 mb-2">
-              {Object.keys(timeRanges).map((range) => (
-                <button key={range} onClick={() => handleRangeSelection(key, range)} className={`btn ${selectedRange.current[key] === range ? "btn-primary" : "btn-primary opacity-70"}`}>
-                  {range}
-                </button>
-              ))}
-            </div>
-            <div ref={(el) => setGraphRef(key, el)} style={{ width: "100%", height: "320px" }} />
-          </div>
+          <Card key={key} className="min-h-[300px] h-[400px]">
+            <>
+              <div className="flex flex-wrap justify-between items-center mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 max-w-[70%]">
+                  {title}
+                </h3>
+                <div className="flex flex-wrap gap-1">
+                  {Object.keys(timeRanges).map((range) => (
+                    <button 
+                      key={range} 
+                      onClick={() => handleRangeSelection(key, range)} 
+                      className={`btn btn-xs ${selectedRange.current[key] === range ? "btn-primary" : "btn-secondary"}`}
+                    >
+                      {range}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div ref={(el) => setGraphRef(key, el)} style={{ width: "100%", height: "320px" }} />
+            </>
+          </Card>
         ))}
       </div>
     </div>
