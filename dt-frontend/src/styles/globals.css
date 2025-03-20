@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-/* ✅ Light Theme */
+/* Light Theme */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
@@ -15,7 +15,7 @@
   --color-base-content: var(--zinc-900);
 }
 
-/* ✅ Dark Theme (Now Uses Obsidian Colors) */
+/* Dark Theme (Now Uses Obsidian Colors) */
 @plugin "daisyui/theme" {
   name: "dark";
   --color-primary: #10b981;
@@ -28,7 +28,7 @@
   --color-base-content: var(--obsidian-100);
 }
 
-/* ✅ Define Obsidian & Zinc Colors */
+/* Define Obsidian & Zinc Colors */
 @layer base {
   :root {
     /* 🎨 Zinc Palette */
@@ -55,7 +55,7 @@
     --obsidian-800: #1b1b1d;
     --obsidian-900: #151517;
 
-    /* ✅ Other Variables */
+    /* Other Variables */
     --glass: rgba(255, 255, 255, 0.1);
     --border: var(--zinc-300);
     --input: var(--zinc-100);
@@ -63,7 +63,7 @@
   }
 }
 
-/* ✅ Apply Obsidian Colors in Dark Mode */
+/* Apply Obsidian Colors in Dark Mode */
 [data-theme="dark"] {
   --background: var(--obsidian-900);
   --foreground: var(--obsidian-100);
@@ -80,9 +80,9 @@
   --ring: var(--obsidian-600);
 }
 
-/* ✅ Manually Define Utility Classes for Tailwind */
+/* Manually Define Utility Classes for Tailwind */
 @layer utilities {
-  /* ✅ Light Mode */
+  /* Light Mode */
   /* [data-theme="light"] .bg-zinc-50 { background-color: var(--zinc-50); }
   [data-theme="light"] .bg-zinc-100 { background-color: var(--zinc-100); }
   [data-theme="light"] .bg-zinc-200 { background-color: var(--zinc-200); }
@@ -94,7 +94,7 @@
   [data-theme="light"] .bg-zinc-800 { background-color: var(--zinc-800); }
   [data-theme="light"] .bg-zinc-900 { background-color: var(--zinc-900); } */
 
-  /* ✅ Dark Mode */
+  /* Dark Mode */
   [data-theme="dark"] .bg-obsidian-50 { background-color: var(--obsidian-50); }
   [data-theme="dark"] .bg-obsidian-100 { background-color: var(--obsidian-100); }
   [data-theme="dark"] .bg-obsidian-200 { background-color: var(--obsidian-200); }
@@ -118,7 +118,7 @@
 .bg-obsidian-800 { background-color: var(--obsidian-800); }
 .bg-obsidian-900 { background-color: var(--obsidian-900); }
 
-/* ✅ Ensure DaisyUI Picks Up These Variables */
+/* Ensure DaisyUI Picks Up These Variables */
 @layer base {
   body {
     font-family: theme("fontFamily.sans");
@@ -127,7 +127,7 @@
   }
 }
 
-/* ✅ Glass Effect */
+/* Glass Effect */
 .glass {
   background: var(--glass);
   backdrop-filter: blur(12px);
