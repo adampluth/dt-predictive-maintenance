@@ -4,8 +4,8 @@ import { store } from "@/store";
 import { Provider as ReduxProvider, useSelector } from "react-redux";
 import { RootState } from "@/store";
 
-import "@fontsource/inter/index.css"; // Inter variable font
-import "@fontsource/archivo/700.css"; // Archivo Bold
+import "@fontsource/inter/index.css";
+import "@fontsource/archivo/700.css";
 import "@/styles/globals.css";
 
 import Header from "@/components/Header";

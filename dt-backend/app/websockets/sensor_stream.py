@@ -116,10 +116,10 @@ def mock_sensor_data():
             "machine_failure": previous_values["machine_failure"],
             "mode": previous_values["mode"],
             "cycle_count": previous_values["cycle_count"],
-            "timestamp": int(time() * 1000),  # ✅ Add timestamp in milliseconds
+            "timestamp": int(time() * 1000),  # Add timestamp in milliseconds
         }
 
-        print(f"📡 Sending Data: {data}")  # ✅ Debugging: Verify timestamps are included
+        print(f"📡 Sending Data: {data}")  # Debugging: Verify timestamps are included
 
         asyncio.run(manager.broadcast(data))
         sleep(1)
